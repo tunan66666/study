@@ -189,5 +189,168 @@ public class BinaryTreeService {
         return -1;
     }
 
+    /**
+     * 求二叉树的最大深度
+     * @param node
+     * @return
+     */
+    public int getMaxDepth(TreeNode node) {
+        if(node == null) {
+            return 0;
+        }
+        int left = getMaxDepth(node.getLeft());
+        int right = getMaxDepth(node.getRight());
+        return Math.max(left, right) + 1;
+    }
+
+    /**
+     * 求二叉树的最小深度
+     * @param node
+     * @return
+     */
+    public int getMinDepth(TreeNode node) {
+        if (node == null) {
+            return 0;
+        }
+        if (node.getLeft() == null && node.getRight() == null) {
+            return 1;
+        }
+        return Math.min(getMinDepth(node.getLeft()), getMinDepth(node.getRight())) + 1;
+    }
+
+    /**
+     * 求二叉树中的节点个数
+     * @param node
+     * @return
+     */
+    public int getNodeNum(TreeNode node) {
+        if (node == null) {
+            return 0;
+        }
+        int left = getNodeNum(node.getLeft());
+        int right = getNodeNum(node.getRight());
+        return left + right + 1;
+    }
+
+    /**
+     * 求二叉树中叶子节点的个数
+     * @param node
+     * @return
+     */
+    public int getNoChildNodeNum(TreeNode node) {
+        if (node == null) {
+            return 0;
+        }
+        if (node.getLeft() == null && node.getRight() == null) {
+            return 1;
+        }
+        return getNoChildNodeNum(node.getLeft()) + getNoChildNodeNum(node.getRight());
+    }
+
+    /**
+     * 求二叉树第k层节点的个数
+     * @param node
+     * @param k
+     * @return
+     */
+    public int getKLevelNodeNum(TreeNode node, int k) {
+        if (node == null || k < 1) {
+            return 0;
+        }
+        if (k == 1) {
+            return 1;
+        }
+        int left = getKLevelNodeNum(node.getLeft(), k-1);
+        int right = getKLevelNodeNum(node.getRight(), k-1);
+        return left + right;
+    }
+
+    /**
+     * 判断二叉树是否是平衡二叉树
+     * @param node
+     * @return
+     */
+    public Boolean isAVLTree(TreeNode node) {
+        if (node == null) {
+            return Boolean.TRUE;
+        }
+        // 若左子树和右子树高度相差大于1，则非平衡二叉树
+        if (Math.abs(getMaxDepth(node.getLeft()) - getMaxDepth(node.getRight())) > 1) {
+            return Boolean.FALSE;
+        }
+        return isAVLTree(node.getLeft()) && isAVLTree(node.getRight());
+    }
+
+    /**
+     * 判断两颗二叉树是否完全相同
+     * @param node1
+     * @param node2
+     * @return
+     */
+    public Boolean isSameTree(TreeNode node1, TreeNode node2) {
+        if (node1 == null && node2 == null) {
+            return Boolean.TRUE;
+        }else if (node1 == null || node2 == null) {
+            return Boolean.FALSE;
+        } else if (node1.getData() != node2.getData()) {
+            return Boolean.FALSE;
+        }
+        Boolean left = isSameTree(node1.getLeft(), node2.getLeft());
+        Boolean right = isSameTree(node1.getRight(), node2.getRight());
+        return left && right;
+    }
+
+    /**
+     * 判断两颗二叉树是否互为镜像
+     * @param node1
+     * @param node2
+     * @return
+     */
+    public Boolean isMirror(TreeNode node1, TreeNode node2) {
+        if (node1 == null && node2 == null) {
+            return Boolean.TRUE;
+        }
+        if (node1 == null || node2 == null) {
+            return Boolean.FALSE;
+        }
+        if (node1.getData() != node2.getData()) {
+            return Boolean.FALSE;
+        }
+        return isMirror(node1.getLeft(), node2.getRight()) && isMirror(node1.getRight(), node2.getLeft());
+    }
+
+    /**
+     * 求二叉树的镜像／翻转二叉树（破坏原来的树）
+     * @param node
+     * @return
+     */
+    public TreeNode mirrorTreeDestory(TreeNode node) {
+        if (node == null) {
+            return null;
+        }
+        TreeNode left = mirrorTreeDestory(node.getLeft());
+        TreeNode right = mirrorTreeDestory(node.getRight());
+        node.setLeft(right);
+        node.setRight(left);
+        return node;
+    }
+
+    /**
+     * 求二叉树的镜像／翻转二叉树（不破坏原来的树）
+     * @param node
+     * @return
+     */
+    public TreeNode mirrorTreeNoDestory(TreeNode node) {
+        if (node == null) {
+            return null;
+        }
+        TreeNode left = mirrorTreeNoDestory(node.getLeft());
+        TreeNode right = mirrorTreeNoDestory(node.getRight());
+
+        TreeNode node1 = new TreeNode(node.getData());
+        node1.setLeft(right);
+        node1.setRight(left);
+        return node1;
+    }
 
 }

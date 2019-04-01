@@ -1,0 +1,10 @@
+hs_err_pid*
+target/
+.idea
+*.iml
+.DS_Store
+.classpath
+.project
+logs
+*.log
+*.pyc

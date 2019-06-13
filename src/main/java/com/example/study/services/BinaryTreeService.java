@@ -190,7 +190,7 @@ public class BinaryTreeService {
     }
 
     /**
-     * 求二叉树的最大深度
+     * 求二叉树的最大深度／最大高度
      * @param node
      * @return
      */
@@ -215,11 +215,14 @@ public class BinaryTreeService {
         if (node.getLeft() == null && node.getRight() == null) {
             return 1;
         }
-        return Math.min(getMinDepth(node.getLeft()), getMinDepth(node.getRight())) + 1;
+        int left = getMinDepth(node.getLeft());
+        int right = getMinDepth(node.getRight());
+        return Math.min(left, right) + 1;
     }
 
+
     /**
-     * 求二叉树中的节点个数
+     * 求二叉树中节点的个数
      * @param node
      * @return
      */
@@ -266,6 +269,50 @@ public class BinaryTreeService {
     }
 
     /**
+     * 求两个二叉树的最低公共祖先节点
+     * @param root
+     * @param t1
+     * @param t2
+     * @return
+     */
+    public TreeNode getLastCommonParent (TreeNode root, TreeNode t1, TreeNode t2) {
+        if (findNode(root.getLeft(), t1)) {
+            if (findNode(root.getRight(), t2)) {
+                return root;
+            } else {
+                return getLastCommonParent(root.getLeft(), t1, t2);
+            }
+        } else {
+            if (findNode(root.getLeft(), t2)) {
+                return root;
+            } else {
+                return getLastCommonParent(root.getRight(), t1, t2);
+            }
+        }
+    }
+
+    /**
+     * 查找节点node是否在当前的二叉树中
+     * @param root
+     * @param node
+     * @return
+     */
+    private Boolean findNode (TreeNode root, TreeNode node) {
+        if (root == null || node == null) {
+            return false;
+        }
+        if (root == node) {
+            return true;
+        }
+        boolean found = findNode(root.getLeft(), node);
+        if (!found) {
+            found = findNode(root.getRight(), node);
+        }
+        return found;
+    }
+
+
+    /**
      * 判断二叉树是否是平衡二叉树
      * @param node
      * @return
@@ -280,6 +327,95 @@ public class BinaryTreeService {
         }
         return isAVLTree(node.getLeft()) && isAVLTree(node.getRight());
     }
+
+    /**
+     * 判断二叉树是否是完全二叉树
+     * @param node
+     * @return
+     */
+    public Boolean isCompleteTree(TreeNode node) {
+        if (node == null) {
+            return false;
+        }
+        Queue<TreeNode> queue = new LinkedList<TreeNode>();
+        queue.add(node);
+        Boolean result = true;
+        Boolean hasChild = true;
+        while (!queue.isEmpty()) {
+            TreeNode current = queue.remove();
+            if (hasChild) {
+                if (current.getLeft() != null && current.getRight() != null) {
+                    queue.add(current.getLeft());
+                    queue.add(current.getRight());
+                } else if (current.getLeft() != null && current.getRight() == null) {
+                    queue.add(current.getLeft());
+                    hasChild = false;
+                } else if (current.getLeft() == null && current.getRight() != null) {
+                    result = false;
+                    break;
+                } else {
+                    hasChild = false;
+                }
+            } else {
+                if (current.getLeft() != null || current.getRight() != null) {
+                    result = false;
+                    break;
+                }
+            }
+        }
+        return result;
+    }
+
+    /**
+     * 判断二叉树是否是合法的二叉查找树(BST)
+     * @param node
+     * @return
+     */
+    public Boolean isValidBST(TreeNode node) {
+        if (node == null) {
+            return true;
+        }
+        String treeStr = infixOrderTree(node);
+        System.out.println(treeStr);
+        String[] treeAry = treeStr.split(":");
+        for (int i=0; i < treeAry.length-1; i++) {
+            int numI = Integer.parseInt(treeAry[i]);
+            int numNext = Integer.parseInt(treeAry[i+1]);
+            if (numI >= numNext) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * 采用中序遍历来遍历二叉树，节点之间用冒号（:）分隔
+     * @param node
+     * @return
+     */
+    private String infixOrderTree(TreeNode node) {
+        if (node == null) {
+            return "";
+        }
+        String left = infixOrderTree(node.getLeft());
+        String data = node.getData();
+        String right = infixOrderTree(node.getRight());
+        String res = "";
+        if (StringUtils.isNotBlank(left)) {
+            res += ":" + left;
+        }
+        if (StringUtils.isNotBlank(data)) {
+            res += ":" + data;
+        }
+        if (StringUtils.isNotBlank(right)) {
+            res += ":"+ right;
+        }
+        if (res.substring(0, 1).equals(":")) {
+            res = res.substring(1);
+        }
+        return res;
+    }
+
 
     /**
      * 判断两颗二叉树是否完全相同
@@ -353,85 +489,8 @@ public class BinaryTreeService {
         return node1;
     }
 
-    /**
-     * 是否是完全二叉树
-     * @param node
-     * @return
-     */
-    public Boolean isCompleteTree(TreeNode node) {
-        if (node == null) {
-            return false;
-        }
-        Queue<TreeNode> queue = new LinkedList<TreeNode>();
-        queue.add(node);
-        Boolean result = true;
-        Boolean hasChild = true;
-        while (!queue.isEmpty()) {
-            TreeNode current = queue.remove();
-            if (hasChild) {
-                if (current.getLeft() != null && current.getRight() != null) {
-                    queue.add(current.getLeft());
-                    queue.add(current.getRight());
-                } else if (current.getLeft() != null && current.getRight() == null) {
-                    queue.add(current.getLeft());
-                    hasChild = false;
-                } else if (current.getLeft() == null && current.getRight() != null) {
-                    result = false;
-                    break;
-                } else {
-                    hasChild = false;
-                }
-            } else {
-                if (current.getLeft() != null || current.getRight() != null) {
-                    result = false;
-                    break;
-                }
-            }
-        }
-        return result;
-    }
 
-    /**
-     * 求两个二叉树的最低公共祖先节点
-     * @param root
-     * @param t1
-     * @param t2
-     * @return
-     */
-    public TreeNode getLastCommonParent (TreeNode root, TreeNode t1, TreeNode t2) {
-        if (findNode(root.getLeft(), t1)) {
-            if (findNode(root.getRight(), t2)) {
-                return root;
-            } else {
-                return getLastCommonParent(root.getLeft(), t1, t2);
-            }
-        } else {
-            if (findNode(root.getLeft(), t2)) {
-                return root;
-            } else {
-                return getLastCommonParent(root.getRight(), t1, t2);
-            }
-        }
-    }
 
-    /**
-     * 查找节点node是否在当前的二叉树中
-     * @param root
-     * @param node
-     * @return
-     */
-    private Boolean findNode (TreeNode root, TreeNode node) {
-        if (root == null || node == null) {
-            return false;
-        }
-        if (root == node) {
-            return true;
-        }
-        boolean found = findNode(root.getLeft(), node);
-        if (!found) {
-            found = findNode(root.getRight(), node);
-        }
-        return found;
-    }
+
 
 }

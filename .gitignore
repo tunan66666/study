@@ -8,4 +8,3 @@ target/
 logs
 *.log
 *.pyc
-cases/src/*.class

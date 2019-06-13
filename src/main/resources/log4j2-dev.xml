@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <Appenders>
+        <Console name="CONSOLE" target="SYSTEM_OUT">
+            <PatternLayout charset="UTF-8" pattern="[%d{HH:mm:ss,SSS}] [%p] - %l - %m%n" />
+        </Console>
+
+        <RollingFile name="RollingFile" fileName="logs/study.log" filePattern="logs/study.%d{yyyy-MM-dd}.log">
+            <PatternLayout pattern="[%d{HH:mm:ss:SSS}] [%p] - %l - %m%n" />
+            <TimeBasedTriggeringPolicy/>
+        </RollingFile>
+    </Appenders>
+
+    <Loggers>
+        <root level="info">
+            <AppenderRef ref="CONSOLE" />
+            <AppenderRef ref="RollingFile" />
+        </root>
+    </Loggers>
+</configuration>

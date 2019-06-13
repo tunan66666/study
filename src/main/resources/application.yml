@@ -1,0 +1,5 @@
+
+logging:
+  config:
+    # 制定log的配置文件
+    classpath: log4j2-dev.xml

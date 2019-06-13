@@ -64,6 +64,12 @@ public class BinaryTreeController {
         String mirrorTreePreStr3 = binaryTreeService.preOrderRecursion(treeNode2);
         String mirrorTreePreStr4 = binaryTreeService.preOrderRecursion(mirrorTree2);
 
+        // 是否是完全二叉树
+        Boolean isComplete = binaryTreeService.isCompleteTree(treeNode2);
+
+        // 求两个二叉树的最低公共祖先节点
+        TreeNode lastCommonParent = binaryTreeService.getLastCommonParent(treeNode1, treeNode1.getLeft().getLeft(), treeNode1.getLeft().getRight());
+
         Map<String, Object> mp = new HashMap<>();
         mp.put("preStrRecursion", preStrRecursion);
         mp.put("preStrIteration", preStrIteration);
@@ -91,6 +97,9 @@ public class BinaryTreeController {
         mp.put("mirrorTreePreStr2", mirrorTreePreStr2);
         mp.put("mirrorTreePreStr3", mirrorTreePreStr3);
         mp.put("mirrorTreePreStr4", mirrorTreePreStr4);
+
+        mp.put("isComplete", isComplete);
+        mp.put("getLastCommonParent", lastCommonParent);
 
         return new ResponseMessage<>(mp);
     }

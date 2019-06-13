@@ -353,4 +353,85 @@ public class BinaryTreeService {
         return node1;
     }
 
+    /**
+     * 是否是完全二叉树
+     * @param node
+     * @return
+     */
+    public Boolean isCompleteTree(TreeNode node) {
+        if (node == null) {
+            return false;
+        }
+        Queue<TreeNode> queue = new LinkedList<TreeNode>();
+        queue.add(node);
+        Boolean result = true;
+        Boolean hasChild = true;
+        while (!queue.isEmpty()) {
+            TreeNode current = queue.remove();
+            if (hasChild) {
+                if (current.getLeft() != null && current.getRight() != null) {
+                    queue.add(current.getLeft());
+                    queue.add(current.getRight());
+                } else if (current.getLeft() != null && current.getRight() == null) {
+                    queue.add(current.getLeft());
+                    hasChild = false;
+                } else if (current.getLeft() == null && current.getRight() != null) {
+                    result = false;
+                    break;
+                } else {
+                    hasChild = false;
+                }
+            } else {
+                if (current.getLeft() != null || current.getRight() != null) {
+                    result = false;
+                    break;
+                }
+            }
+        }
+        return result;
+    }
+
+    /**
+     * 求两个二叉树的最低公共祖先节点
+     * @param root
+     * @param t1
+     * @param t2
+     * @return
+     */
+    public TreeNode getLastCommonParent (TreeNode root, TreeNode t1, TreeNode t2) {
+        if (findNode(root.getLeft(), t1)) {
+            if (findNode(root.getRight(), t2)) {
+                return root;
+            } else {
+                return getLastCommonParent(root.getLeft(), t1, t2);
+            }
+        } else {
+            if (findNode(root.getLeft(), t2)) {
+                return root;
+            } else {
+                return getLastCommonParent(root.getRight(), t1, t2);
+            }
+        }
+    }
+
+    /**
+     * 查找节点node是否在当前的二叉树中
+     * @param root
+     * @param node
+     * @return
+     */
+    private Boolean findNode (TreeNode root, TreeNode node) {
+        if (root == null || node == null) {
+            return false;
+        }
+        if (root == node) {
+            return true;
+        }
+        boolean found = findNode(root.getLeft(), node);
+        if (!found) {
+            found = findNode(root.getRight(), node);
+        }
+        return found;
+    }
+
 }

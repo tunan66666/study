@@ -1,5 +1,6 @@
 hs_err_pid*
 target/
+out/
 .idea
 *.iml
 .DS_Store
